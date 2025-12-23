@@ -1,0 +1,28 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local development files
+DATA_RAW/
+*.csv
+*.xlsx
+*.xls
+
+# Original HTML files (only docs/ is published)
+/index.html
+/cuenta_detallada.html
+/analisis_bancario.html
+/analisis_consolidado.html
+
+# Images source at root (only docs/comprobantes is published)
+/comprobantes/
+
+# Plan files
+*.md
+!docs/*.md

@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta Detallada - Jorge Carrizo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+        }
+
+        /* ===== LOGIN STYLES ===== */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-container h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-container > p {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .login-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e8e8e8;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: #666;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .error-msg {
+            color: #ff3b30;
+            margin-top: 15px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .error-msg.visible {
+            display: block;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .hint {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        /* ===== MAIN CONTENT STYLES ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            display: none;
+        }
+
+        .container.visible {
+            display: block;
+        }
+
+        .container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 600px) {
+            .summary-cards {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .card-label {
+            font-size: 0.75em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (min-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+            .card-label {
+                font-size: 0.85em;
+            }
+            .card-value {
+                font-size: 1.5em;
+            }
+        }
+
+        .card-value.green { color: #00d084; }
+        .card-value.blue { color: #00d4ff; }
+        .card-value.purple { color: #7b2cbf; }
+        .card-value.orange { color: #ff9500; }
+
+        .month-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .month-header {
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), rgba(123, 44, 191, 0.2));
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        @media (min-width: 600px) {
+            .month-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 20px;
+            }
+        }
+
+        .month-header:hover {
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.3), rgba(123, 44, 191, 0.3));
+        }
+
+        .month-name {
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        @media (min-width: 600px) {
+            .month-name {
+                font-size: 1.1em;
+            }
+        }
+
+        .month-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        @media (min-width: 600px) {
+            .status-badge {
+                font-size: 0.8em;
+                padding: 4px 12px;
+            }
+        }
+
+        .status-pagado {
+            background: rgba(0, 208, 132, 0.2);
+            color: #00d084;
+            border: 1px solid rgba(0, 208, 132, 0.4);
+        }
+
+        .status-parcial {
+            background: rgba(255, 149, 0, 0.2);
+            color: #ff9500;
+            border: 1px solid rgba(255, 149, 0, 0.4);
+        }
+
+        .status-pendiente {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            border: 1px solid rgba(255, 59, 48, 0.4);
+        }
+
+        .month-total {
+            font-weight: bold;
+            color: #00d084;
+            font-size: 0.9em;
+        }
+
+        .month-body {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+
+        .month-body.expanded {
+            max-height: 1000px;
+            padding: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .month-body.expanded {
+                padding: 15px 20px;
+            }
+        }
+
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .transaction-row:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-type {
+            font-size: 0.65em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        @media (min-width: 600px) {
+            .transaction-type {
+                font-size: 0.75em;
+                padding: 2px 8px;
+                margin-right: 10px;
+            }
+        }
+
+        .type-pago {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .type-pasa {
+            background: rgba(255, 149, 0, 0.2);
+            color: #ff9500;
+        }
+
+        .type-viene {
+            background: rgba(0, 208, 132, 0.2);
+            color: #00d084;
+        }
+
+        .type-arriendo {
+            background: rgba(123, 44, 191, 0.2);
+            color: #a855f7;
+        }
+
+        .transaction-date {
+            color: #888;
+            font-size: 0.8em;
+            flex: 1;
+        }
+
+        @media (min-width: 600px) {
+            .transaction-date {
+                font-size: 0.9em;
+            }
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 600px) {
+            .transaction-amount {
+                font-size: 1em;
+            }
+        }
+
+        .transaction-amount.positive {
+            color: #00d084;
+        }
+
+        .transaction-amount.negative {
+            color: #ff9500;
+        }
+
+        .year-divider {
+            text-align: center;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: linear-gradient(90deg, transparent, rgba(123, 44, 191, 0.3), transparent);
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        @media (min-width: 600px) {
+            .year-divider {
+                padding: 20px;
+                font-size: 1.3em;
+                margin: 20px 0;
+            }
+        }
+
+        .totals-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 600px) {
+            .totals-section {
+                padding: 25px;
+            }
+        }
+
+        .totals-section h3 {
+            margin-bottom: 15px;
+            color: #00d4ff;
+            font-size: 1em;
+        }
+
+        @media (min-width: 600px) {
+            .totals-section h3 {
+                font-size: 1.1em;
+            }
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        @media (min-width: 600px) {
+            .totals-row {
+                padding: 10px 0;
+            }
+        }
+
+        .totals-row:last-child {
+            border-bottom: none;
+            font-size: 1em;
+            padding-top: 12px;
+        }
+
+        @media (min-width: 600px) {
+            .totals-row:last-child {
+                font-size: 1.2em;
+                padding-top: 15px;
+            }
+        }
+
+        .totals-label {
+            color: #888;
+            font-size: 0.85em;
+        }
+
+        @media (min-width: 600px) {
+            .totals-label {
+                font-size: 1em;
+            }
+        }
+
+        .totals-value {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 600px) {
+            .totals-value {
+                font-size: 1em;
+            }
+        }
+
+        .expand-all {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .expand-all button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e8e8e8;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+
+        .expand-all button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .note {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85em;
+            color: #ff9500;
+        }
+
+        @media (min-width: 600px) {
+            .note {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        .logout-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 10px 30px;
+            background: rgba(255, 59, 48, 0.2);
+            border: 1px solid rgba(255, 59, 48, 0.4);
+            border-radius: 8px;
+            color: #ff3b30;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 59, 48, 0.3);
+        }
+
+        /* Modal styles */
+        .transaction-amount.clickable {
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            transition: all 0.2s;
+        }
+
+        .transaction-amount.clickable:hover {
+            color: #fff !important;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .transaction-amount.clickable.has-image::after {
+            content: ' 📷';
+            font-size: 0.8em;
+        }
+
+        .transaction-amount.clickable.no-image::after {
+            content: ' 📋';
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 1.5em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 59, 48, 0.5);
+            border-color: #ff3b30;
+        }
+
+        .modal-info {
+            text-align: center;
+            margin-top: 15px;
+            color: #888;
+        }
+
+        .modal-info .amount {
+            font-size: 1.3em;
+            color: #00d084;
+            font-weight: bold;
+        }
+
+        .modal-info .date {
+            color: #00d4ff;
+        }
+
+        .modal-data {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            min-width: 280px;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 600px) {
+            .modal-data {
+                padding: 30px;
+                min-width: 320px;
+                max-width: 450px;
+            }
+        }
+
+        .modal-data h3 {
+            text-align: center;
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        @media (min-width: 600px) {
+            .modal-data h3 {
+                font-size: 1.3em;
+            }
+        }
+
+        .modal-data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 600px) {
+            .modal-data-row {
+                padding: 12px 0;
+            }
+        }
+
+        .modal-data-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-data-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .modal-data-value {
+            font-weight: bold;
+            text-align: right;
+            font-size: 0.95em;
+        }
+
+        .modal-data-value.monto {
+            color: #00d084;
+            font-size: 1.1em;
+        }
+
+        @media (min-width: 600px) {
+            .modal-data-value.monto {
+                font-size: 1.2em;
+            }
+        }
+
+        .modal-data-value.banco-mach {
+            color: #7b2cbf;
+        }
+
+        .modal-data-value.banco-estado {
+            color: #00d4ff;
+        }
+
+        .modal-data-value.verificado {
+            color: #00d084;
+        }
+
+        .modal-data-value.solo-excel {
+            color: #ff9500;
+        }
+
+        .modal-data-value.solo-cartola {
+            color: #00d4ff;
+        }
+
+        /* Hide login when authenticated */
+        .login-wrapper.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-wrapper" id="login-screen">
+        <div class="login-container">
+            <div class="login-icon">🔐</div>
+            <h1>Cuenta Detallada</h1>
+            <p>Jorge Carrizo - Arriendo Terreno Cucuter</p>
+
+            <form id="login-form" onsubmit="return checkPassword(event)">
+                <div class="input-group">
+                    <label for="password">RUT del arrendatario</label>
+                    <input type="text" id="password" placeholder="Ej: 12.345.678-9" autocomplete="off" required>
+                </div>
+                <button type="submit" class="btn-submit">Ingresar</button>
+            </form>
+
+            <p class="error-msg" id="error-msg">RUT incorrecto. Intente nuevamente.</p>
+
+            <p class="hint">El acceso esta restringido al arrendatario.</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="main-content">
+        <h1>Cuenta Detallada - Jorge Carrizo</h1>
+        <p class="subtitle">Arriendo Terreno Cucuter - Desglose por Mes</p>
+
+        <div class="note">
+            <strong>Nota:</strong> Se asume que todos los meses anteriores a Junio 2024 estan al dia (pagos en efectivo u otros medios).
+        </div>
+
+        <div class="summary-cards">
+            <div class="card">
+                <div class="card-label">Total Pagado</div>
+                <div class="card-value green">$3,740,000</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Total Arriendos</div>
+                <div class="card-value purple">$3,600,000</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Saldo a Favor</div>
+                <div class="card-value blue">$140,000</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Meses Cubiertos</div>
+                <div class="card-value orange">20 meses</div>
+            </div>
+        </div>
+
+        <div class="expand-all">
+            <button onclick="toggleAll()">Expandir/Contraer Todo</button>
+        </div>
+
+        <div id="months-container">
+            <!-- Generated by JavaScript -->
+        </div>
+
+        <div class="totals-section">
+            <h3>Resumen Final</h3>
+            <div class="totals-row">
+                <span class="totals-label">Total de Pagos Registrados</span>
+                <span class="totals-value" style="color: #00d084;">$3,740,000</span>
+            </div>
+            <div class="totals-row">
+                <span class="totals-label">Total de Arriendos (20 meses)</span>
+                <span class="totals-value" style="color: #a855f7;">$3,600,000</span>
+            </div>
+            <div class="totals-row">
+                <span class="totals-label">Saldo a Favor del Arrendatario</span>
+                <span class="totals-value" style="color: #00d4ff;">$140,000</span>
+            </div>
+            <div class="totals-row">
+                <span class="totals-label">Febrero 2026</span>
+                <span class="totals-value" style="color: #ff9500;">$140,000 de $180,000 (faltan $40,000)</span>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Cerrar Sesion</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="receiptModal" onclick="closeModal(event)">
+        <div class="modal-content" id="modalImageContent" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <img id="modalImage" src="" alt="Comprobante">
+            <div class="modal-info">
+                <div class="amount" id="modalAmount"></div>
+                <div class="date" id="modalDate"></div>
+            </div>
+        </div>
+        <div class="modal-data" id="modalDataContent" onclick="event.stopPropagation()" style="display: none;">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3>Detalle de Transaccion</h3>
+            <div class="modal-data-row">
+                <span class="modal-data-label">Fecha</span>
+                <span class="modal-data-value" id="dataFecha"></span>
+            </div>
+            <div class="modal-data-row">
+                <span class="modal-data-label">Monto</span>
+                <span class="modal-data-value monto" id="dataMonto"></span>
+            </div>
+            <div class="modal-data-row">
+                <span class="modal-data-label">Banco</span>
+                <span class="modal-data-value" id="dataBanco"></span>
+            </div>
+            <div class="modal-data-row">
+                <span class="modal-data-label">Estado</span>
+                <span class="modal-data-value" id="dataEstado"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== AUTHENTICATION =====
+        const VALID_PASSWORDS = [
+            '12.049.525-9',
+            '12049525-9',
+            '120495259'
+        ];
+
+        function normalizeRUT(rut) {
+            return rut.replace(/[\s.]/g, '').toLowerCase();
+        }
+
+        function checkPassword(event) {
+            event.preventDefault();
+            const input = document.getElementById('password').value;
+            const normalizedInput = normalizeRUT(input);
+            const isValid = VALID_PASSWORDS.some(pwd => normalizeRUT(pwd) === normalizedInput);
+
+            if (isValid) {
+                sessionStorage.setItem('authenticated', 'true');
+                showContent();
+            } else {
+                const errorMsg = document.getElementById('error-msg');
+                errorMsg.classList.add('visible');
+                document.getElementById('password').value = '';
+                setTimeout(() => errorMsg.classList.remove('visible'), 3000);
+            }
+            return false;
+        }
+
+        function showContent() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.add('visible');
+            renderMonths();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('authenticated');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-content').classList.remove('visible');
+        }
+
+        // Check if already authenticated
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            showContent();
+        }
+
+        // ===== DATA =====
+        const comprobantes = {
+            '2025-04-04': { file: 'comprobantes/2025-04-03_100000.jpg', monto: 100000 },
+            '2025-05-10': { file: 'comprobantes/2025-05-10_050000.jpg', monto: 50000 },
+            '2025-05-26': { file: 'comprobantes/2025-05-26_050000.jpg', monto: 50000 },
+            '2025-06-11': { file: 'comprobantes/2025-06-10_040000.jpg', monto: 40000 },
+            '2025-06-23': { file: 'comprobantes/2025-06-21_030000.jpg', monto: 30000 },
+            '2025-07-01': { file: 'comprobantes/2025-07-01_050000.jpg', monto: 50000 },
+            '2025-07-15': { file: 'comprobantes/2025-07-15_050000.jpg', monto: 50000 },
+            '2025-07-29': { file: 'comprobantes/2025-07-29_050000.jpg', monto: 50000 }
+        };
+
+        const transaccionesDB = {
+            '2024-02-02': { monto: 10000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel' },
+            '2024-02-12': { monto: 10000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-02-13': { monto: 60000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-02-19': { monto: 30000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-02-25': { monto: 10000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-02-26': { monto: 20000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-03-01': { monto: 30000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-03-20': { monto: 10000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-03-21': { monto: 80000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-04-02': { monto: 20000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel' },
+            '2024-04-06': { monto: 50000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-04-23': { monto: 50000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-05-04': { monto: 60000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-05-23': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel' },
+            '2024-05-28': { monto: 50000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-06-07': { monto: 20000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-06-12': { monto: 80000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-07-10': { monto: 440000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel' },
+            '2024-08-30': { monto: 200000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola', nota: '2 transferencias: $120K + $80K' },
+            '2024-10-03': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-10-07': { monto: 80000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-10-18': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-10-28': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-11-04': { monto: 30000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-11-06': { monto: 50000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-11-14': { monto: 80000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-11-25': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-11-27': { monto: 80000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-05': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-06': { monto: 250000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-09': { monto: 50000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-18': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-23': { monto: 50000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2024-12-30': { monto: 30000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-01-08': { monto: 100000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-01-12': { monto: 20000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel' },
+            '2025-01-14': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-01-21': { monto: 300000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-01-27': { monto: 50000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-03-21': { monto: 60000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola' },
+            '2025-04-04': { monto: 100000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
+            '2025-05-10': { monto: 50000, banco: 'MACH', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
+            '2025-05-26': { monto: 50000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
+            '2025-06-11': { monto: 40000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
+            '2025-06-23': { monto: 30000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
+            '2025-07-01': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
+            '2025-07-15': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
+            '2025-07-29': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' }
+        };
+
+        const accountData = [
+            {
+                year: 2024,
+                months: [
+                    {
+                        month: "Junio 2024",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "02/02/2024", monto: 10000 },
+                            { tipo: "pago", fecha: "12/02/2024", monto: 10000 },
+                            { tipo: "pago", fecha: "13/02/2024", monto: 60000 },
+                            { tipo: "pago", fecha: "19/02/2024", monto: 30000 },
+                            { tipo: "pago", fecha: "25/02/2024", monto: 10000 },
+                            { tipo: "pago", fecha: "26/02/2024", monto: 20000 },
+                            { tipo: "pago", fecha: "01/03/2024", monto: 30000 },
+                            { tipo: "pago", fecha: "20/03/2024", monto: 10000 }
+                        ]
+                    },
+                    {
+                        month: "Julio 2024",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "21/03/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "06/04/2024", monto: 50000 },
+                            { tipo: "pago", fecha: "23/04/2024", monto: 50000 }
+                        ]
+                    },
+                    {
+                        month: "Agosto 2024",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "02/04/2024", monto: 20000 },
+                            { tipo: "pago", fecha: "04/05/2024", monto: 60000 },
+                            { tipo: "pago", fecha: "23/05/2024", monto: 50000 },
+                            { tipo: "pago", fecha: "28/05/2024", monto: 50000 }
+                        ]
+                    },
+                    {
+                        month: "Sep-Oct-Nov 2024",
+                        arriendo: 540000,
+                        note: "3 meses",
+                        transactions: [
+                            { tipo: "pago", fecha: "07/06/2024", monto: 20000 },
+                            { tipo: "pago", fecha: "12/06/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "10/07/2024", monto: 440000 }
+                        ]
+                    },
+                    {
+                        month: "Diciembre 2024",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "10/07/2024", monto: 60000 },
+                            { tipo: "pago", fecha: "30/08/2024", monto: 120000 }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: 2025,
+                months: [
+                    {
+                        month: "Enero 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "30/08/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "03/10/2024", monto: 100000 }
+                        ]
+                    },
+                    {
+                        month: "Febrero 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "07/10/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "18/10/2024", monto: 100000 }
+                        ]
+                    },
+                    {
+                        month: "Marzo 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "28/10/2024", monto: 100000 },
+                            { tipo: "pago", fecha: "04/11/2024", monto: 30000 },
+                            { tipo: "pago", fecha: "06/11/2024", monto: 50000 }
+                        ]
+                    },
+                    {
+                        month: "Abril 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "14/11/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "25/11/2024", monto: 100000 }
+                        ]
+                    },
+                    {
+                        month: "Mayo 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "27/11/2024", monto: 80000 },
+                            { tipo: "pago", fecha: "05/12/2024", monto: 100000 }
+                        ]
+                    },
+                    {
+                        month: "Junio 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "06/12/2024", monto: 250000 },
+                            { tipo: "pasa", fecha: "Pasan a Julio", monto: -70000 }
+                        ]
+                    },
+                    {
+                        month: "Julio 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Junio", monto: 70000 },
+                            { tipo: "pago", fecha: "09/12/2024", monto: 50000 },
+                            { tipo: "pago", fecha: "18/12/2024", monto: 100000 },
+                            { tipo: "pasa", fecha: "Pasan a Agosto", monto: -40000 }
+                        ]
+                    },
+                    {
+                        month: "Agosto 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Julio", monto: 40000 },
+                            { tipo: "pago", fecha: "23/12/2024", monto: 50000 },
+                            { tipo: "pago", fecha: "30/12/2024", monto: 30000 },
+                            { tipo: "pago", fecha: "08/01/2025", monto: 100000 },
+                            { tipo: "pasa", fecha: "Pasan a Septiembre", monto: -40000 }
+                        ]
+                    },
+                    {
+                        month: "Septiembre 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Agosto", monto: 40000 },
+                            { tipo: "pago", fecha: "12/01/2025", monto: 20000 },
+                            { tipo: "pago", fecha: "14/01/2025", monto: 100000 },
+                            { tipo: "pago", fecha: "21/01/2025", monto: 300000 },
+                            { tipo: "pasa", fecha: "Pasan a Octubre", monto: -280000 }
+                        ]
+                    },
+                    {
+                        month: "Octubre 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Septiembre", monto: 280000 },
+                            { tipo: "pasa", fecha: "Pasan a Noviembre", monto: -100000 }
+                        ]
+                    },
+                    {
+                        month: "Noviembre 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Octubre", monto: 100000 },
+                            { tipo: "pago", fecha: "27/01/2025", monto: 50000 },
+                            { tipo: "pago", fecha: "21/03/2025", monto: 60000 },
+                            { tipo: "pasa", fecha: "Pasan a Diciembre", monto: -30000 }
+                        ]
+                    },
+                    {
+                        month: "Diciembre 2025",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Noviembre", monto: 30000 },
+                            { tipo: "pago", fecha: "04/04/2025", monto: 100000 },
+                            { tipo: "pago", fecha: "10/05/2025", monto: 50000 }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: 2026,
+                months: [
+                    {
+                        month: "Enero 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "26/05/2025", monto: 50000 },
+                            { tipo: "pago", fecha: "11/06/2025", monto: 40000 },
+                            { tipo: "pago", fecha: "23/06/2025", monto: 30000 },
+                            { tipo: "pago", fecha: "01/07/2025", monto: 50000 },
+                            { tipo: "pago", fecha: "15/07/2025", monto: 50000 },
+                            { tipo: "pasa", fecha: "Pasan a Febrero", monto: -40000 }
+                        ]
+                    },
+                    {
+                        month: "Febrero 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Enero", monto: 40000 },
+                            { tipo: "pago", fecha: "29/07/2025", monto: 50000 }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ===== HELPER FUNCTIONS =====
+        function formatMoney(amount) {
+            return '$' + Math.abs(amount).toLocaleString('es-CL');
+        }
+
+        function fechaToISO(fechaStr) {
+            const parts = fechaStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return null;
+        }
+
+        function formatFecha(fechaISO) {
+            const [year, month, day] = fechaISO.split('-');
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            return `${parseInt(day)} de ${meses[parseInt(month) - 1]} ${year}`;
+        }
+
+        function getTransactionClass(tipo) {
+            switch(tipo) {
+                case 'pago': return 'type-pago';
+                case 'pasa': return 'type-pasa';
+                case 'viene': return 'type-viene';
+                case 'arriendo': return 'type-arriendo';
+                default: return '';
+            }
+        }
+
+        function getTransactionLabel(tipo) {
+            switch(tipo) {
+                case 'pago': return 'PAGO';
+                case 'pasa': return 'PASA';
+                case 'viene': return 'VIENE';
+                case 'arriendo': return 'ARRIENDO';
+                default: return tipo.toUpperCase();
+            }
+        }
+
+        function calculateMonthTotal(transactions) {
+            return transactions.reduce((sum, t) => sum + t.monto, 0);
+        }
+
+        function getMonthStatus(total, arriendo) {
+            if (total >= arriendo) return { class: 'status-pagado', text: 'PAGADO' };
+            if (total > 0) return { class: 'status-parcial', text: 'PARCIAL' };
+            return { class: 'status-pendiente', text: 'PENDIENTE' };
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function openReceipt(fechaISO, monto) {
+            const comprobante = comprobantes[fechaISO];
+            const transaccion = transaccionesDB[fechaISO] || {
+                monto: monto,
+                banco: 'Desconocido',
+                estado: 'Registrado en Excel',
+                fuente: 'Excel'
+            };
+
+            const modalImageContent = document.getElementById('modalImageContent');
+            const modalDataContent = document.getElementById('modalDataContent');
+
+            if (comprobante) {
+                modalImageContent.style.display = 'block';
+                modalDataContent.style.display = 'none';
+                document.getElementById('modalImage').src = comprobante.file;
+                document.getElementById('modalAmount').textContent = formatMoney(monto);
+                document.getElementById('modalDate').textContent = formatFecha(fechaISO);
+            } else {
+                modalImageContent.style.display = 'none';
+                modalDataContent.style.display = 'block';
+
+                document.getElementById('dataFecha').textContent = formatFecha(fechaISO);
+                document.getElementById('dataMonto').textContent = formatMoney(monto);
+
+                const bancoEl = document.getElementById('dataBanco');
+                bancoEl.textContent = transaccion.banco;
+                bancoEl.className = 'modal-data-value';
+                if (transaccion.banco === 'MACH') bancoEl.classList.add('banco-mach');
+                else if (transaccion.banco === 'Banco Estado') bancoEl.classList.add('banco-estado');
+
+                const estadoEl = document.getElementById('dataEstado');
+                estadoEl.textContent = transaccion.estado;
+                estadoEl.className = 'modal-data-value';
+                if (transaccion.estado === 'Verificado') estadoEl.classList.add('verificado');
+                else if (transaccion.estado === 'Solo en Excel') estadoEl.classList.add('solo-excel');
+                else if (transaccion.estado.includes('Cartola')) estadoEl.classList.add('solo-cartola');
+            }
+
+            document.getElementById('receiptModal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('receiptModal')) {
+                document.getElementById('receiptModal').classList.remove('active');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ===== RENDER FUNCTIONS =====
+        function renderMonths() {
+            const container = document.getElementById('months-container');
+            let html = '';
+
+            accountData.forEach(yearData => {
+                html += `<div class="year-divider">${yearData.year}</div>`;
+
+                yearData.months.forEach((monthData, idx) => {
+                    const total = calculateMonthTotal(monthData.transactions);
+                    const status = getMonthStatus(total, monthData.arriendo);
+                    const monthId = `month-${yearData.year}-${idx}`;
+
+                    html += `
+                        <div class="month-section">
+                            <div class="month-header" onclick="toggleMonth('${monthId}')">
+                                <span class="month-name">${monthData.month}${monthData.note ? ` (${monthData.note})` : ''}</span>
+                                <div class="month-status">
+                                    <span class="status-badge ${status.class}">${status.text}</span>
+                                    <span class="month-total">${formatMoney(total)} / ${formatMoney(monthData.arriendo)}</span>
+                                </div>
+                            </div>
+                            <div class="month-body" id="${monthId}">
+                    `;
+
+                    monthData.transactions.forEach(t => {
+                        const amountClass = t.monto >= 0 ? 'positive' : 'negative';
+                        const fechaISO = fechaToISO(t.fecha);
+                        const hasReceipt = fechaISO && comprobantes[fechaISO];
+                        const isPayment = t.tipo === 'pago' && fechaISO;
+                        const clickableClass = isPayment ? (hasReceipt ? 'clickable has-image' : 'clickable no-image') : '';
+                        const clickHandler = isPayment ? `onclick="openReceipt('${fechaISO}', ${t.monto})"` : '';
+
+                        html += `
+                            <div class="transaction-row">
+                                <span class="transaction-type ${getTransactionClass(t.tipo)}">${getTransactionLabel(t.tipo)}</span>
+                                <span class="transaction-date">${t.fecha}</span>
+                                <span class="transaction-amount ${amountClass} ${clickableClass}" ${clickHandler}>${t.monto >= 0 ? '+' : ''}${formatMoney(t.monto)}</span>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            <div class="transaction-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2);">
+                                <span class="transaction-type type-arriendo">ARRIENDO</span>
+                                <span class="transaction-date">Costo mensual</span>
+                                <span class="transaction-amount" style="color: #a855f7;">-${formatMoney(monthData.arriendo)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleMonth(monthId) {
+            document.getElementById(monthId).classList.toggle('expanded');
+        }
+
+        let allExpanded = false;
+        function toggleAll() {
+            allExpanded = !allExpanded;
+            document.querySelectorAll('.month-body').forEach(body => {
+                if (allExpanded) body.classList.add('expanded');
+                else body.classList.remove('expanded');
+            });
+        }
+    </script>
+</body>
+</html>
