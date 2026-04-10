@@ -772,19 +772,19 @@
         <div class="summary-cards">
             <div class="card">
                 <div class="card-label">Total Pagado</div>
-                <div class="card-value green">$4,260,000</div>
+                <div class="card-value green">$4,550,000</div>
             </div>
             <div class="card">
                 <div class="card-label">Total Arriendos</div>
-                <div class="card-value purple">$4,320,000</div>
+                <div class="card-value purple">$4,500,000</div>
             </div>
             <div class="card">
-                <div class="card-label">Saldo Pendiente</div>
-                <div class="card-value orange">$60,000</div>
+                <div class="card-label">Saldo a Favor</div>
+                <div class="card-value blue">$50,000</div>
             </div>
             <div class="card">
                 <div class="card-label">Meses Cubiertos</div>
-                <div class="card-value blue">23 + parcial</div>
+                <div class="card-value green">25 meses</div>
             </div>
         </div>
 
@@ -800,19 +800,19 @@
             <h3>Resumen Final</h3>
             <div class="totals-row">
                 <span class="totals-label">Total de Pagos Registrados</span>
-                <span class="totals-value" style="color: #00d084;">$4,260,000</span>
+                <span class="totals-value" style="color: #00d084;">$4,550,000</span>
             </div>
             <div class="totals-row">
-                <span class="totals-label">Total de Arriendos (24 meses: Jun 2024 - May 2026)</span>
-                <span class="totals-value" style="color: #a855f7;">$4,320,000</span>
+                <span class="totals-label">Total de Arriendos (25 meses: Jun 2024 - Jun 2026)</span>
+                <span class="totals-value" style="color: #a855f7;">$4,500,000</span>
             </div>
             <div class="totals-row">
                 <span class="totals-label">Meses Completamente Cubiertos</span>
-                <span class="totals-value" style="color: #00d4ff;">23 meses (Jun 2024 - Abr 2026)</span>
+                <span class="totals-value" style="color: #00d4ff;">25 meses (Jun 2024 - Jun 2026)</span>
             </div>
             <div class="totals-row">
-                <span class="totals-label">Mayo 2026</span>
-                <span class="totals-value" style="color: #ff9500;">$70,000 de $180,000 (faltan $110,000)</span>
+                <span class="totals-label">Saldo a Favor</span>
+                <span class="totals-value" style="color: #00d084;">$50,000 (28% de Julio 2026)</span>
             </div>
         </div>
 
@@ -964,7 +964,9 @@
             '2025-07-29': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
             '2025-12-24': { monto: 270000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Febrero y marzo. Op: 8067951' },
             '2026-01-31': { monto: 70000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Abono arriendo terreno cucuter. Op: 8069462' },
-            '2026-03-07': { monto: 180000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Adelanto terreno cucuter. Op: 8011440' }
+            '2026-03-07': { monto: 180000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Adelanto terreno cucuter. Op: 8011440' },
+            '2026-04-10a': { monto: 110000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Completando Mayo 2026. Op: 8074120' },
+            '2026-04-10b': { monto: 180000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Arriendo Junio 2026. Op: 8078225' }
         };
 
         const accountData = [
@@ -1182,7 +1184,15 @@
                         month: "Mayo 2026",
                         arriendo: 180000,
                         transactions: [
-                            { tipo: "viene", fecha: "Viene de Abril", monto: 70000 }
+                            { tipo: "viene", fecha: "Viene de Abril", monto: 70000 },
+                            { tipo: "pago", fecha: "10/04/2026", monto: 110000 }
+                        ]
+                    },
+                    {
+                        month: "Junio 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "10/04/2026", monto: 180000 }
                         ]
                     }
                 ]
