@@ -772,19 +772,19 @@
         <div class="summary-cards">
             <div class="card">
                 <div class="card-label">Total Pagado</div>
-                <div class="card-value green">$3,740,000</div>
+                <div class="card-value green">$4,260,000</div>
             </div>
             <div class="card">
                 <div class="card-label">Total Arriendos</div>
-                <div class="card-value purple">$3,600,000</div>
+                <div class="card-value purple">$4,320,000</div>
             </div>
             <div class="card">
-                <div class="card-label">Saldo a Favor</div>
-                <div class="card-value blue">$140,000</div>
+                <div class="card-label">Saldo Pendiente</div>
+                <div class="card-value orange">$60,000</div>
             </div>
             <div class="card">
                 <div class="card-label">Meses Cubiertos</div>
-                <div class="card-value orange">20 meses</div>
+                <div class="card-value blue">23 + parcial</div>
             </div>
         </div>
 
@@ -800,19 +800,19 @@
             <h3>Resumen Final</h3>
             <div class="totals-row">
                 <span class="totals-label">Total de Pagos Registrados</span>
-                <span class="totals-value" style="color: #00d084;">$3,740,000</span>
+                <span class="totals-value" style="color: #00d084;">$4,260,000</span>
             </div>
             <div class="totals-row">
-                <span class="totals-label">Total de Arriendos (20 meses)</span>
-                <span class="totals-value" style="color: #a855f7;">$3,600,000</span>
+                <span class="totals-label">Total de Arriendos (24 meses: Jun 2024 - May 2026)</span>
+                <span class="totals-value" style="color: #a855f7;">$4,320,000</span>
             </div>
             <div class="totals-row">
-                <span class="totals-label">Saldo a Favor del Arrendatario</span>
-                <span class="totals-value" style="color: #00d4ff;">$140,000</span>
+                <span class="totals-label">Meses Completamente Cubiertos</span>
+                <span class="totals-value" style="color: #00d4ff;">23 meses (Jun 2024 - Abr 2026)</span>
             </div>
             <div class="totals-row">
-                <span class="totals-label">Febrero 2026</span>
-                <span class="totals-value" style="color: #ff9500;">$140,000 de $180,000 (faltan $40,000)</span>
+                <span class="totals-label">Mayo 2026</span>
+                <span class="totals-value" style="color: #ff9500;">$70,000 de $180,000 (faltan $110,000)</span>
             </div>
         </div>
 
@@ -907,7 +907,10 @@
             '2025-06-23': { file: 'comprobantes/2025-06-21_030000.jpg', monto: 30000 },
             '2025-07-01': { file: 'comprobantes/2025-07-01_050000.jpg', monto: 50000 },
             '2025-07-15': { file: 'comprobantes/2025-07-15_050000.jpg', monto: 50000 },
-            '2025-07-29': { file: 'comprobantes/2025-07-29_050000.jpg', monto: 50000 }
+            '2025-07-29': { file: 'comprobantes/2025-07-29_050000.jpg', monto: 50000 },
+            '2025-12-24': { file: 'comprobantes/2025-12-24_270000.jpg', monto: 270000 },
+            '2026-01-31': { file: 'comprobantes/2026-01-31_070000.jpg', monto: 70000 },
+            '2026-03-07': { file: 'comprobantes/2026-03-07_180000.jpg', monto: 180000 }
         };
 
         const transaccionesDB = {
@@ -958,7 +961,10 @@
             '2025-06-23': { monto: 30000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Excel + Cartola + Imagen' },
             '2025-07-01': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
             '2025-07-15': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
-            '2025-07-29': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' }
+            '2025-07-29': { monto: 50000, banco: 'Desconocido', estado: 'Solo en Excel', fuente: 'Excel + Imagen' },
+            '2025-12-24': { monto: 270000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Febrero y marzo. Op: 8067951' },
+            '2026-01-31': { monto: 70000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Abono arriendo terreno cucuter. Op: 8069462' },
+            '2026-03-07': { monto: 180000, banco: 'Banco Estado', estado: 'Verificado', fuente: 'Comprobante WhatsApp', nota: 'Mensaje: Adelanto terreno cucuter. Op: 8011440' }
         };
 
         const accountData = [
@@ -1151,7 +1157,32 @@
                         arriendo: 180000,
                         transactions: [
                             { tipo: "viene", fecha: "Viene de Enero", monto: 40000 },
-                            { tipo: "pago", fecha: "29/07/2025", monto: 50000 }
+                            { tipo: "pago", fecha: "29/07/2025", monto: 50000 },
+                            { tipo: "pago", fecha: "24/12/2025", monto: 270000 },
+                            { tipo: "pasa", fecha: "Pasan a Marzo", monto: -180000 }
+                        ]
+                    },
+                    {
+                        month: "Marzo 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Febrero", monto: 180000 }
+                        ]
+                    },
+                    {
+                        month: "Abril 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "pago", fecha: "31/01/2026", monto: 70000 },
+                            { tipo: "pago", fecha: "07/03/2026", monto: 180000 },
+                            { tipo: "pasa", fecha: "Pasan a Mayo", monto: -70000 }
+                        ]
+                    },
+                    {
+                        month: "Mayo 2026",
+                        arriendo: 180000,
+                        transactions: [
+                            { tipo: "viene", fecha: "Viene de Abril", monto: 70000 }
                         ]
                     }
                 ]
