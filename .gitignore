@@ -26,3 +26,4 @@ DATA_RAW/
 # Plan files
 *.md
 !docs/*.md
+!CLAUDE.md
