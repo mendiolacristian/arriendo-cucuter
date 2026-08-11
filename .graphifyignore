@@ -1,0 +1,29 @@
+# Exclusiones del grafo de conocimiento (graphify).
+# Se escribe ANTES del primer build: `update` NO purga lo que ya entro al grafo, asi que
+# excluir algo despues exige un `extract` completo. El `.gitignore` ya se respeta por
+# defecto; aqui va solo lo que git SI rastrea y el grafo NO debe contener.
+
+# ---- El grafo es de CODIGO ----
+# Medido en el monorepo de reservas (2026-08-11): los .md aportaban 14.000 nodos (43% del
+# grafo) y 19.585 aristas, de las cuales las aristas .md -> codigo eran CERO (solo
+# encabezado -> subencabezado). Un indice de contenidos paralelo que no conecta con nada,
+# diluye la deteccion de comunidades e infla el informe. Para buscar en documentos hay grep.
+*.md
+
+# ---- Nada que pueda cargar un secreto ----
+# De los .json/.yaml graphify indexa las CLAVES como nodos, no los valores (verificado),
+# pero un archivo de credenciales no es arquitectura y no tiene por que estar en el grafo.
+.env*
+*credential*
+*secret*
+*token*.json
+*.pem
+*.key
+
+# ---- Cuarentena (regla "NUNCA borrar") ----
+# Codigo retirado a proposito. Si entra al grafo, reaparece como respuesta valida.
+_REVISAR-BORRAR/
+
+# ---- La salida del grafo NUNCA es entrada del grafo ----
+graphify-out/
+.planning/graphs/

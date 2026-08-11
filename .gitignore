@@ -27,3 +27,6 @@ DATA_RAW/
 *.md
 !docs/*.md
 !CLAUDE.md
+
+# Grafo de conocimiento (graphify): artefacto local, por repo. Nunca a git.
+graphify-out/
